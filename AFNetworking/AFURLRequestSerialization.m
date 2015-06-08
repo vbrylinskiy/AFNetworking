@@ -27,6 +27,8 @@
 #import <CoreServices/CoreServices.h>
 #endif
 
+#import "Logger.h"
+
 NSString * const AFURLRequestSerializationErrorDomain = @"com.alamofire.error.serialization.request";
 NSString * const AFNetworkingOperationFailingURLRequestErrorKey = @"com.alamofire.serialization.request.error.response";
 
@@ -367,7 +369,14 @@ forHTTPHeaderField:(NSString *)field
     }
 
     mutableRequest = [[self requestBySerializingRequest:mutableRequest withParameters:parameters error:error] mutableCopy];
-
+    
+    //// SOFTSERVE LOG INJECTION ///////////////////////////
+    LogToFile([NSString stringWithFormat:@"REQUEST: \n%@: %@\n%@", method,
+               [[mutableRequest URL] absoluteString],
+               [[NSString alloc] initWithData:[mutableRequest HTTPBody]
+                                     encoding:NSUTF8StringEncoding]]);
+    //// SOFTSERVE LOG INJECTION ///////////////////////////
+    
 	return mutableRequest;
 }
 

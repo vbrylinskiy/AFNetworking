@@ -27,6 +27,8 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
+#import "Logger.h"
+
 NSString * const AFURLResponseSerializationErrorDomain = @"com.alamofire.error.serialization.response";
 NSString * const AFNetworkingOperationFailingURLResponseErrorKey = @"com.alamofire.serialization.response.error.response";
 NSString * const AFNetworkingOperationFailingURLResponseDataErrorKey = @"com.alamofire.serialization.response.error.data";
@@ -250,6 +252,11 @@ static id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingO
     NSError *serializationError = nil;
     @autoreleasepool {
         NSString *responseString = [[NSString alloc] initWithData:data encoding:stringEncoding];
+        
+        //// SOFTSERVE LOG INJECTION ///////////////////////////
+        LogToFile([NSString stringWithFormat:@"RESPONSE: %@\n%@", [response.URL absoluteString], responseString]);
+        //// SOFTSERVE LOG INJECTION ///////////////////////////
+        
         if (responseString && ![responseString isEqualToString:@" "]) {
             // Workaround for a bug in NSJSONSerialization when Unicode character escape codes are used instead of the actual character
             // See http://stackoverflow.com/a/12843465/157142
